@@ -10,26 +10,29 @@ const resolvers = {
   Query: {
     hello: () => "hello world",
     viewer: async (parent, args, { req }, info) => {
-      // try {
-      //   const user = getUserId(req);
-      //   console.log(user)
-      // return {id: user._id, email:user.email}
-      // } catch (error) {
-      //   console.log(error)
-      // }
-      const { token } = cookie.parse(req.headers.cookie || "");
-      console.log("token: ", token);
-      if (token) {
-        try {
-          const { user } = jwt.verify(token, process.env.JWT_SECRET);
+      try {
+        const user = await getUserId(req);
 
-          return { id: user._id, email: user.email };
-        } catch {
-          throw new AuthenticationError(
-            "Authentication token is invalid, please log in"
-          );
-        }
+      return { id: user._id, email: user.email };
+      } catch (error) {
+        console.log(error)
       }
+      return null
+
+      // const { token } = cookie.parse(req.headers.cookie || "");
+
+      // if (token) {
+      //   try {
+
+      //     const { user } = jwt.verify(token, process.env.JWT_SECRET);
+
+      //     return { id: user._id, email: user.email };
+      //   } catch {
+      //     throw new AuthenticationError(
+      //       "Authentication token is invalid, please log in"
+      //     );
+      //   }
+      // }
     }
   },
   Mutation: {
