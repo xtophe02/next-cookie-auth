@@ -3,8 +3,6 @@ const generateToken = require("../utils/generateToken");
 const getUserId = require("../utils/getUserId");
 const bcrypt = require("bcryptjs");
 const cookie = require("cookie");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const resolvers = {
   Query: {
@@ -13,11 +11,11 @@ const resolvers = {
       try {
         const user = await getUserId(req);
 
-      return { id: user._id, email: user.email };
+        return { id: user._id, email: user.email };
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-      return null
+      return null;
 
       // const { token } = cookie.parse(req.headers.cookie || "");
 
@@ -84,6 +82,20 @@ const resolvers = {
       } catch (err) {
         throw new Error(err);
       }
+    },
+    signOut: async (parent, args, { res }, info) => {
+      res.setHeader(
+        "Set-Cookie",
+        cookie.serialize("token", "", {
+          httpOnly: true,
+          maxAge: -1,
+          path: "/",
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production"
+        })
+      );
+
+      return true;
     }
   }
 };

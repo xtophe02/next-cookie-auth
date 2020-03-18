@@ -8,6 +8,7 @@ const typeDefs = gql`
   type Mutation {
     signIn(input: SignInInput!): User
     signUp(input: SignUpInput!): User
+    signOut: Boolean!
   }
   type User {
     id: ID!
