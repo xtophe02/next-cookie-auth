@@ -15,7 +15,7 @@ const ViewerQuery = gql`
 `;
 const Home = () => {
   const router = useRouter();
-  const { data, loading,error } = useQuery(ViewerQuery, {fetchPolicy:'no-cache'});
+  const { data, loading } = useQuery(ViewerQuery, {fetchPolicy:'no-cache'});
   
   console.log("data", data);
   // console.log(loading);

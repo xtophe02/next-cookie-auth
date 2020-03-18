@@ -3,7 +3,7 @@ import { withApollo } from "../apollo/client";
 import { useMutation, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useRouter } from "next/router";
-import { getErrorMessage } from "../lib/form";
+//import { getErrorMessage } from "../lib/form";
 import LoginForm from "../components/LoginForm";
 
 const SignInMutation = gql`
@@ -18,15 +18,16 @@ const SignInMutation = gql`
 const login = () => {
   const client = useApolloClient();
   const router = useRouter();
-  const [signIn] = useMutation(SignInMutation);
+  const [signIn, {loading}] = useMutation(SignInMutation);
 
   const [state, setState] = React.useState({
     email: "moreira.christophe@gmail.com",
-    password: "a21140108"
+    password: "fcportu"
   });
 
   const [errorMsg, setErrorMsg] = React.useState();
 
+  
   const handleSubmit = async event => {
     event.preventDefault();
     try {
@@ -43,7 +44,8 @@ const login = () => {
         await router.push("/");
       }
     } catch (error) {
-      setErrorMsg(getErrorMessage(error));
+      //setErrorMsg(getErrorMessage(error));
+      setErrorMsg(error.graphQLErrors.map(x => x.message));
     }
   };
   const handleChange = e =>
@@ -52,10 +54,10 @@ const login = () => {
 
   return (
     <>
-      <h1>Sign In</h1>
+      <h1>Sign In </h1>
       <form onSubmit={handleSubmit}>
         {errorMsg && <p>{errorMsg}</p>}
-        <LoginForm state={state} handleChange={handleChange} />
+        <LoginForm state={state} handleChange={handleChange} loading={loading} />
       </form>
     </>
   );
