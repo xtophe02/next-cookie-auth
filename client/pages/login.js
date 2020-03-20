@@ -5,6 +5,7 @@ import gql from "graphql-tag";
 import { useRouter } from "next/router";
 //import { getErrorMessage } from "../lib/form";
 import LoginForm from "../components/LoginForm";
+import Layout from '../components/Layout'
 
 const SignInMutation = gql`
   mutation SignIn($input: SignInInput!) {
@@ -41,11 +42,13 @@ const login = () => {
       });
       
       if (data.signIn) {
+        client.writeData({data:{user:data.signIn}})
         await router.push("/");
       }
     } catch (error) {
       //setErrorMsg(getErrorMessage(error));
       setErrorMsg(error.graphQLErrors.map(x => x.message));
+      
     }
   };
   const handleChange = e =>
@@ -54,7 +57,7 @@ const login = () => {
 
   return (
     <>
-      <h1>Sign In </h1>
+    <Layout title="Login"/>
       <form onSubmit={handleSubmit}>
         {errorMsg && <p>{errorMsg}</p>}
         <LoginForm state={state} handleChange={handleChange} loading={loading} />

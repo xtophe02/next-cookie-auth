@@ -1,9 +1,10 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { withApollo } from "../apollo/client";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Link from "next/link";
+import Layout from "../components/Layout";
 
 const ViewerQuery = gql`
   query ViewerQuery {
@@ -15,6 +16,7 @@ const ViewerQuery = gql`
 `;
 const Home = () => {
   const router = useRouter();
+  const client = useApolloClient();
   const { data, loading } = useQuery(ViewerQuery, {fetchPolicy:'no-cache'});
   
   console.log("data", data);
@@ -22,10 +24,10 @@ const Home = () => {
   if (!loading && data.viewer === null && typeof window !== 'undefined') {
     router.push("/login");
   }
-
+console.log(client.cache.data)
   if (data && data.viewer) {
     return (
-      <div>
+      <Layout title="Home" loggedIn={!!data.viewer}>
         You're signed in as {data.viewer.email} goto{" "}
         <Link href="/about">
           <a>static</a>
@@ -34,7 +36,7 @@ const Home = () => {
         <Link href="/signout">
           <a>signout</a>
         </Link>
-      </div>
+      </Layout>
     );
   }
 

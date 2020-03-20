@@ -3,6 +3,7 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
+
     return { ...initialProps };
   }
 
@@ -25,7 +26,7 @@ class MyDocument extends Document {
             src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
           ></script>
         </Head>
-        <body>
+        <body className="has-navbar-fixed-top">
           <Main />
           <NextScript />
         </body>
