@@ -1,12 +1,14 @@
 import React from 'react'
 import Head from 'next/head'
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import fetch from 'isomorphic-unfetch'
+import { persistCache } from 'apollo-cache-persist';
+
 
 let globalApolloClient = null
-
+const isServer = () => typeof window === `undefined`
 /**
  * Creates and provides the apolloContext
  * to a next.js PageTree. Use it by wrapping
@@ -129,8 +131,16 @@ function createApolloClient(ctx = {}, initialState = {}) {
   const ssrMode = typeof window === 'undefined'
   const cache = new InMemoryCache().restore(initialState)
 
-  cache.writeData({data:{user:null}})
-
+  // console.log('CTX: ',ctx)
+  
+  if(!isServer()){
+    
+    persistCache({
+      cache,
+      storage: window.localStorage,
+    });
+  
+  }
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     ssrMode,
@@ -142,16 +152,15 @@ function createApolloClient(ctx = {}, initialState = {}) {
 function createIsomorphLink(ctx) {
   // if (typeof window === 'undefined') {
   //   const { SchemaLink } = require('apollo-link-schema')
-  //   const { schema } = require('./schema')
-  //   return new SchemaLink({ schema, context: ctx })
+  //   const { typeDefs } = require('./resolvers');
+  //   return new SchemaLink({ typeDefs, context: ctx })
   // } else {
     const { HttpLink } = require('apollo-link-http')
-    const isServer = () => typeof window === `undefined`
+    
     const adjustedUri = !isServer() && process.env.NODE_ENV === 'development' ? process.env.API_URI : process.env.API_URI_DOCKER
-    // console.log('adjustedUri: ', adjustedUri)
+  
     return new HttpLink({
       uri: `${adjustedUri}/graphql`,
-      // uri: 'http://api:4000/graphql',
       credentials: 'include',
       fetch
     })

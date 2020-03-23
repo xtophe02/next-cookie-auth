@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
+import { ViewerQuery } from "../src/queries";
+import { useQuery } from "@apollo/client";
 
-const Header = ({ loggedIn }) => {
+const Header = () => {
+  const { data, loading } = useQuery(ViewerQuery, {
+    fetchPolicy: "cache-only"
+  });
 
   return (
     <nav
@@ -28,9 +33,9 @@ const Header = ({ loggedIn }) => {
           <Link href="/">
             <a className="navbar-item">Home</a>
           </Link>
-
-          <a className="navbar-item">Documentation</a>
-
+          <Link href="/documentation">
+            <a className="navbar-item">Documentation</a>
+          </Link>
           <div className="navbar-item has-dropdown is-hoverable">
             <a className="navbar-link">More</a>
 
@@ -47,7 +52,7 @@ const Header = ({ loggedIn }) => {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              {loggedIn ? (
+              {data && data.viewer ? (
                 <Link href="/signout">
                   <a className="button is-light">Log Out</a>
                 </Link>

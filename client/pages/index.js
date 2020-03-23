@@ -1,30 +1,25 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { withApollo } from "../apollo/client";
-import { useQuery, useApolloClient } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useQuery } from "@apollo/client";
+import {ViewerQuery} from '../src/queries'
 import Link from "next/link";
 import Layout from "../components/Layout";
 
-const ViewerQuery = gql`
-  query ViewerQuery {
-    viewer {
-      id
-      email
-    }
-  }
-`;
+
+
 const Home = () => {
   const router = useRouter();
-  const client = useApolloClient();
-  const { data, loading } = useQuery(ViewerQuery, {fetchPolicy:'no-cache'});
+ 
+  const { data, loading } = useQuery(ViewerQuery, {fetchPolicy:'network-only'});
+
   
-  console.log("data", data);
-  // console.log(loading);
+  // console.log("data", data);
+ 
   if (!loading && data.viewer === null && typeof window !== 'undefined') {
     router.push("/login");
   }
-console.log(client.cache.data)
+// console.log(client.cache.data)
   if (data && data.viewer) {
     return (
       <Layout title="Home" loggedIn={!!data.viewer}>
@@ -42,5 +37,7 @@ console.log(client.cache.data)
 
   return <p>Loading...</p>;
 };
+
+
 
 export default withApollo(Home);

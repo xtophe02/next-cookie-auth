@@ -12,6 +12,7 @@ const resolvers = {
         const user = await getUserId(req);
 
         return { id: user._id, email: user.email };
+        
       } catch (error) {
         console.log(error);
       }

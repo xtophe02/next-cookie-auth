@@ -1,6 +1,6 @@
 import React from "react";
 import { withApollo } from "../apollo/client";
-import { useMutation, useApolloClient } from "@apollo/react-hooks";
+import { useMutation, useApolloClient } from "@apollo/client";
 import gql from "graphql-tag";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";

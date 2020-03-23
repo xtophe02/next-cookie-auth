@@ -1,6 +1,6 @@
 import React from "react";
 import { withApollo } from "../apollo/client";
-import { useMutation, useApolloClient } from "@apollo/react-hooks";
+import { useMutation, useApolloClient } from "@apollo/client";
 import gql from "graphql-tag";
 import { useRouter } from "next/router";
 //import { getErrorMessage } from "../lib/form";
@@ -23,7 +23,7 @@ const login = () => {
 
   const [state, setState] = React.useState({
     email: "moreira.christophe@gmail.com",
-    password: "fcportu"
+    password: "a21140108"
   });
 
   const [errorMsg, setErrorMsg] = React.useState();
@@ -42,7 +42,7 @@ const login = () => {
       });
       
       if (data.signIn) {
-        client.writeData({data:{user:data.signIn}})
+        // client.writeData({data:{AAA:data.signIn}})
         await router.push("/");
       }
     } catch (error) {
